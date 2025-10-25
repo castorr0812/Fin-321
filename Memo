@@ -1,1 +1,32 @@
+def build_workbook(path="fx_hedging_model.xlsx"):
+    sheet_xml = create_sheet_xml()
+    workbook_xml = create_workbook_xml()
+    styles_xml = create_styles_xml()
+    root_rels, workbook_rels, sheet_rels, drawing_rels = create_relationships()
+    content_types = create_content_types()
+    theme_xml = create_theme_xml()
+    drawing_xml = create_drawing_xml()
+    chart_xml = create_chart_xml()
+    app_xml = create_app_xml()
+    core_xml = create_core_xml()
+
+    with ZipFile(path, 'w', ZIP_DEFLATED) as zf:
+        zf.writestr('[Content_Types].xml', content_types)
+        zf.writestr('_rels/.rels', root_rels)
+        zf.writestr('docProps/app.xml', app_xml)
+        zf.writestr('docProps/core.xml', core_xml)
+        zf.writestr('xl/workbook.xml', workbook_xml)
+        zf.writestr('xl/_rels/workbook.xml.rels', workbook_rels)
+        zf.writestr('xl/styles.xml', styles_xml)
+        zf.writestr('xl/theme/theme1.xml', theme_xml)
+        zf.writestr('xl/worksheets/sheet1.xml', sheet_xml)
+        zf.writestr('xl/worksheets/_rels/sheet1.xml.rels', sheet_rels)
+        zf.writestr('xl/drawings/drawing1.xml', drawing_xml)
+        zf.writestr('xl/drawings/_rels/drawing1.xml.rels', drawing_rels)
+        zf.writestr('xl/charts/chart1.xml', chart_xml)
+
+
+if __name__ == "__main__":
+    build_workbook()
+    print("Created fx_hedging_model.xlsx")
 
