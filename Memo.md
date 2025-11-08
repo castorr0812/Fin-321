@@ -3,7 +3,7 @@
 **Created by:** Connor A. Storr  
 **Updated by:** Connor A. Storr  
 **Date Created:** October 24, 2025  
-**Date Updated:** November 7, 2025  
+**Date Updated:** October 24, 2025  
 **Version:** 1.0  
 **LLM Used:** GPT-5  
 
