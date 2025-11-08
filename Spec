@@ -130,10 +130,3 @@ Interest rates and volatility treated as static.
 Transaction costs simplified to a flat rate.
 Option values not derived from Black-Scholes; market quotes assumed.
 Taxes and accounting implications excluded.
-
-** Next Steps **
-Implement model in Excel (Stage 3).
-Create linked input sheet referencing variables above.
-Build calculation tabs for Forward, Money-Market, and Option hedges.
-Automate sensitivity and charting functions.
-Draft Stage 3 memo summarizing numerical outcomes and preferred hedge.
