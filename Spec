@@ -1,4 +1,139 @@
-git add stage2-spec-STORR.md
-git commit -m "Add Stage 2 Technical Specification"
-git push origin main
+# FX Hedging Model – Technical Specification
 
+**Created by:** Connor Storr  
+**Updated by:** Connor Storr  
+**Date Created:** November 7, 2025  
+**Date Updated:** November 7, 2025  
+**Version:** 1.0  
+**LLM Used:** GPT-5  
+
+**Role:** Financial Analyst / Treasury Analyst  
+**Audience:** Chief Financial Officer (CFO) or Director of Treasury  
+
+---
+
+## Purpose  
+Provide a professional, quantitative specification outlining the analytical structure for evaluating FX hedging alternatives for a euro-denominated receivable.
+
+---
+
+## 1. Problem Statement  
+
+Our firm expects to receive **€ 4,500,000 in twelve months** from a European customer for exports priced in euros. This creates a **foreign-exchange exposure** in which the company is **long EUR / short USD**.
+
+At today’s **spot rate** of **1.1619 USD/EUR**, the receivable is worth approximately **\$ 5.23 million**. However, the **one-year forward rate** of **1.0875 USD/EUR** implies potential euro depreciation, reducing the dollar proceeds to roughly **\$ 4.89 million**—a projected decline of about **\$ 340 k**.
+
+**Objective:** Protect the USD value of the euro receivable while maintaining flexibility to benefit from euro appreciation.  
+**Decision Context:** This framework supports the Corporate Treasury team in comparing **forward, money-market, and option hedges** to stabilize USD cash flows.
+
+---
+
+## 2. Inputs (Known Variables)
+
+| Variable | Description | Unit | Example / Value | Source |
+|-----------|--------------|------|-----------------|---------|
+| `FC_AMT` | Foreign-currency receivable | EUR | 4,500,000 | Sales contract |
+| `S₀` | Current EUR/USD spot rate | USD/EUR | 1.1619 | Market data |
+| `F₀` | 1-year EUR/USD forward rate | USD/EUR | 1.0875 | Dealer quote |
+| `r_USD` | USD 1-year interest rate | % p.a. | 4.25 % | Fed funds rate |
+| `r_EUR` | EUR 1-year interest rate | % p.a. | 3.10 % | ECB deposit rate |
+| `t` | Time to maturity | Years | 1.0 | Contract |
+| `K_put` | EUR put (sell EUR) strike | USD/EUR | 1.15 | Analyst set |
+| `K_call` | EUR call (buy EUR) strike | USD/EUR | 1.20 | Analyst set |
+| `Premium_put` | Put premium | USD/EUR | 0.036 | Dealer quote |
+| `Premium_call` | Call premium | USD/EUR | 0.048 | Dealer quote |
+| `t_txn` | Transaction cost per leg | % of notional | 0.10 % | Assumption |
+| `Scenarios` | Spot-rate change range | % change | −10 %, 0 %, +10 % | Scenario design |
+
+> **Tip:** These variable names should be reused directly as named ranges or prompt parameters in Stage 3.
+
+---
+
+## 3. Assumptions & Constraints  
+
+- Interest rates quoted on a **simple annual (360-day)** basis.  
+- Forward rate represents a **1-year maturity contract**.  
+- Settlement occurs exactly 12 months after the valuation date.  
+- **No credit or counterparty risk** assumed.  
+- Transaction costs of **0.10 % per FX leg** included symmetrically.  
+- Exchange rates expressed as **USD per EUR**.  
+- Option premiums are **paid upfront in USD**.  
+- Taxes, hedge accounting, and basis spreads are excluded.  
+- All outputs reported in **USD** for consistency.
+
+These conventions ensure full reproducibility by another treasury analyst.
+
+---
+
+## 4. Calculation Flow  
+
+The model computes USD receipts under each hedge type in the following sequence:
+
+### **A. Forward Hedge**
+1. Lock in conversion at `F₀`.  
+2. Compute USD proceeds:
+
+   ```text
+   USD_forward = FC_AMT × F₀ × (1 – t_txn)
+Record guaranteed USD inflow at maturity.
+
+B. Money-Market Hedge
+Borrow euros today equal to the PV of the receivable:
+PV_EUR = FC_AMT / (1 + r_EUR × t)
+Convert to USD at spot S₀.
+Invest USD proceeds at r_USD for t years.
+At maturity, repay euro loan using receivable.
+USD investment maturity value represents hedged proceeds.
+
+C. Option Hedge
+Select strike prices K_put, K_call.
+Compute premium cost:
+Premium_cost = Premium × FC_AMT
+At maturity:
+If S_T < K_put → exercise put → receive FC_AMT × K_put.
+If S_T > K_put → let expire → receive FC_AMT × S_T.
+Net USD proceeds:
+USD_option = (FC_AMT × Effective_Rate) – Premium_cost
+Generate payoff diagram vs. spot-rate scenarios.
+
+D. Comparative Evaluation
+Tabulate USD results for all hedge types and the unhedged case.
+Compute % deviation from unhedged value and expected USD variance.
+Summarize trade-offs: certainty (forward/MM) vs. optionality (options).
+
+** 5.Outputs
+Output	Description	Format	Purpose
+USD_unhedged	Projected USD value using expected spot	Numeric	Baseline comparison
+USD_forward	USD proceeds from forward hedge	Numeric	Certainty benchmark
+USD_mm	USD proceeds from money-market hedge	Numeric	Cross-check vs. forward
+USD_option	Net USD receipts after option premium	Table / chart	Flexibility analysis
+Chart_1	USD receipts vs. spot rate	Line chart	Visual hedge comparison
+Chart_2	Sensitivity tornado chart	Bar chart	FX-impact visualization
+Summary	Executive-ready conclusion	Text	CFO decision support
+Outputs will form the foundation of a professional treasury dashboard.
+
+6. Sensitivity Plan
+Variable tested: Future spot rate S_T.
+Range: 0.90 × S₀ → 1.10 × S₀ in 0.01 increments.
+Process:
+Recalculate USD proceeds for each hedge under every S_T.
+Present results in a comparison table and line chart.
+Metrics: Expected USD value, standard deviation, min/max, and 95 % VaR.
+Visualization:
+Line chart of USD proceeds vs. S_T.
+Data-table sensitivity for scenario analysis.
+
+7. Limitations & Next Steps
+Limitations
+No modeling of credit, liquidity, or counterparty risk.
+Interest rates and volatility treated as static.
+Transaction costs simplified to a flat rate.
+Option values not derived from Black-Scholes; market quotes assumed.
+Taxes and accounting implications excluded.
+
+** Next Steps **
+Implement model in Excel (Stage 3).
+Create linked input sheet referencing variables above.
+Build calculation tabs for Forward, Money-Market, and Option hedges.
+Automate sensitivity and charting functions.
+Draft Stage 3 memo summarizing numerical outcomes and preferred hedge.
