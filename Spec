@@ -1,1 +1,4 @@
+git add stage2-spec-STORR.md
+git commit -m "Add Stage 2 Technical Specification"
+git push origin main
 
