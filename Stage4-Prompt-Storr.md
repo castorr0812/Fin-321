@@ -5,8 +5,8 @@ Create an Excel file modeling forward, money market, and option hedges for my EU
 
 # CONTEXT FILES (GitHub)
 Use the logic in:
-- https://github.com/your-user/fin321/stage2-spec.md
-- https://github.com/your-user/fin321/stage3-model.xlsx
+- (https://github.com/castorr0812/Fin-321/blob/28c40ed33a1451b1edd9afdb2c5100a0b82b072b/stage2-Spec-Storr.md)
+- (https://github.com/castorr0812/Fin-321/blob/28c40ed33a1451b1edd9afdb2c5100a0b82b072b/stage3-model-STORR-.xlsx)
 
 # INPUT VARIABLES
 Use these exact scenario values and create single-cell named ranges for each:
